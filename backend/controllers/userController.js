@@ -90,7 +90,7 @@ try{
     })
 }catch(err){
     user.resetPasswordToken = undefined;
-    user.resetPasswordExprie = undefined;
+    user.resetPasswordExpire = undefined
 
     await user.save({validateBeforeSave:false});
     return next(new ErrorHandler(err.message,500));

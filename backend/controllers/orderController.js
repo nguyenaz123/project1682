@@ -12,10 +12,12 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     paymentInfo,
     itemsPrice,
     shippingPrice,
+    taxPrice,
     totalPrice
   } = req.body;
   const order = await Order.create({
     shippingInfo,
+    taxPrice,
     orderItems,
     paymentInfo,
     itemsPrice,
