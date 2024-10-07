@@ -7,7 +7,7 @@ const ProtectedRoute = ({ element: Component }) => {
 
   if (loading) return <div>Loading...</div>;
 
-  if (!isAuthenticated) {
+  if (isAuthenticated===false) {
     return <Navigate to="/login" />;
   }
 

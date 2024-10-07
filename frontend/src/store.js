@@ -4,7 +4,7 @@ import {thunk} from "redux-thunk";
 import { productDetalsReducer, productReducer } from "./reducers/productReducer";
 import { forgotPasswordReducer, profileReducer, userReducer } from "./reducers/userReducer";
 import { cartReducer } from "./reducers/cartReducer";
-import {newOrderReducer} from "./reducers/orderReducer";
+import {myOrdersReducer, newOrderReducer} from "./reducers/orderReducer";
 
 // Combine reducers
 const reducer = combineReducers({
@@ -15,6 +15,7 @@ const reducer = combineReducers({
     forgotPassword: forgotPasswordReducer,
     cart: cartReducer,
     newOrder: newOrderReducer,
+    myOrders: myOrdersReducer,
 
 });
 // Initial state
@@ -37,6 +38,6 @@ const store = configureStore({
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middleware),
     preloadedState: initialState,
     devTools: process.env.NODE_ENV !== 'production'
-});
+}); 
 
 export default store;
