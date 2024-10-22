@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import { DataGrid } from "@mui/x-data-grid";
 import "./ProductList.css";
 import { useSelector, useDispatch } from "react-redux";
-import { getProductsAdmin, clearErrors } from "../../actions/productAction";
+import { getProductsAdmin, clearErrors, deleteProduct } from "../../actions/productAction";
 import { Link } from "react-router-dom";
 import { useAlert } from "react-alert";
 import { Button } from "@mui/material";
@@ -10,8 +10,8 @@ import  MetaData  from "../layout/MetaData";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Sidebar from "./Sidebar.js";
-import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { DELETE_PRODUCT_RESET } from '../../constants/productConstants';
 
 
 const ProductList = () => {
@@ -19,14 +19,27 @@ const ProductList = () => {
   const alert = useAlert();
   const navigate = useNavigate();
   const { products, error } = useSelector((state) => state.products);
+  const {error: deleteError, isDeleted} = useSelector((state) => state.product);
+  const deleteProductHandler = (id) => {
+    dispatch(deleteProduct(id));
+  }
   useEffect(() => {
     if (error) {
       alert.error(error);
       dispatch(clearErrors());
     }
+    if (deleteError) {
+        alert.error(deleteError);
+        dispatch(clearErrors());
+      }
+    if (isDeleted) {
+      alert.success("Product deleted successfully");
+      // navigate("/admin/dashboard");
+      dispatch({ type: DELETE_PRODUCT_RESET });
+    }
 
     dispatch(getProductsAdmin());
-  }, [dispatch, alert, error]);
+  }, [dispatch, alert, error, navigate, deleteError, isDeleted]);
   const columns = [
     { field: "id", headerName: "Product ID", minWidth: 250, flex: 0.5 },
 
@@ -65,9 +78,10 @@ const ProductList = () => {
               <EditIcon />
             </Link>
 
-            <Button
+            <Button onClick={()=>deleteProductHandler(params.row.id)}
             >
-              <DeleteIcon />
+            <DeleteIcon />
+
             </Button>
         </Fragment>
         )

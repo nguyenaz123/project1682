@@ -86,20 +86,46 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
 
 // Update Product --Admin
 exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
-    let product = await Product.findById(req.params.id);
+        let product = await Product.findById(req.params.id);
 
-    if (!product) {
-        return res.status(500).json({
-            success: false,
-            message: "Product not found"
-        })
-    }
-    product = await Product.findByIdAndUpdate(req.params.id, req.body,
-        { new: true, runValidators: true, useFindAndnModify: false });
+        if (!product) {
+            return res.status(500).json({
+                success: false,
+                message: "Product not found"
+            })
+        }
+        let images = [];
 
-    res.status(200).json({
-        success: true,
-        product
+        if (typeof req.body.images === "string") {
+            images.push(req.body.images);
+        } else {
+            images = req.body.images;
+        }
+        if (images !== undefined) {
+            for (let i = 0; i < product.images.length; i++) {
+                await cloudinary.v2.uploader.destroy(product.images[i].public_id);
+            }
+            const imagesLinks = [];
+
+            for (let i = 0; i < images.length; i++) {
+            const result = await cloudinary.v2.uploader.upload(images[i], {
+            folder: "products",
+            });
+
+            imagesLinks.push({
+            public_id: result.public_id,
+            url: result.secure_url,
+            });
+            }
+            req.body.images = imagesLinks;
+        }
+
+        product = await Product.findByIdAndUpdate(req.params.id, req.body,
+            { new: true, runValidators: true, useFindAndnModify: false });
+
+        res.status(200).json({
+            success: true,
+            product
     })
 });
 
@@ -114,7 +140,9 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
             });
         }
 
-
+        for (let i = 0; i < product.images.length; i++) {
+            await cloudinary.v2.uploader.destroy(product.images[i].public_id);
+        }
         await product.deleteOne();
         res.status(200).json({
             success: true,

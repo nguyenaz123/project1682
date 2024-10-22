@@ -31,7 +31,8 @@ import MyOrders from "./component/Order/MyOrders.js";
 import OrderDetails from "./component/Order/OrderDetails.js";
 import Dashboard from "./component/Admin/Dashboard.js";
 import ProductList from "./component/Admin/ProductList.js";
-import CreateProduct from './component/Admin/CreateProduct';
+import CreateProduct from './component/Admin/CreateProduct.js';
+import UpdateProduct from './component/Admin/UpdateProduct.js';
 
 
 
@@ -68,6 +69,10 @@ function App() {
         <Route path="/password/update" element={<ProtectedRoute element={<UpdatePassword />} />} />
         <Route path="/password/forgot" element={<ForgotPassword />} />
         <Route path="/password/reset/:token" element={<ResetPassword />} />
+
+
+
+
         <Route path="/cart"  element={<Cart />}  />
         <Route path="/shipping" element={<ProtectedRoute element={<Shipping />} />} />
         <Route path="/order/confirm" element={<ProtectedRoute element={<ConfirmOrder />} />} />
@@ -86,9 +91,13 @@ function App() {
 
 
 
+
+
         <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true} element={<Dashboard />} />} />
         <Route path="/admin/products" element={<ProtectedRoute isAdmin={true} element={<ProductList />} />} />
         <Route path="/admin/product" element={<ProtectedRoute isAdmin={true} element={<CreateProduct />} />} />
+        <Route path="/admin/product/:id" element={<ProtectedRoute isAdmin={true} element={<UpdateProduct />} />} />
+
 
 
 
