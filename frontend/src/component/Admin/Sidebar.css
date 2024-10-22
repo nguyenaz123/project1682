@@ -1,0 +1,67 @@
+.sidebar {
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
+  padding: 4rem 0;
+}
+
+.sidebar>a:first-child {
+  padding: 0;
+}
+
+.sidebar>a>img {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  transition: all 0.5s;
+}
+
+.sidebar>a>img:hover {
+  filter: drop-shadow(0 0 10px tomato);
+}
+
+.sidebar a,
+.sidebar__products>p {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.493);
+  font: 200 1rem "Roboto";
+  padding: 2rem;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.sidebar a:hover,
+.sidebar__products>p:hover {
+  color: tomato;
+  transform: scale(1.1);
+}
+
+.sidebar a>p,
+.sidebar__products>p {
+  display: flex;
+  align-items: center;
+}
+
+.sidebar a>p>svg,
+.sidebar__products>p>svg {
+  margin-right: 0.5rem;
+}
+
+.sidebar__submenu {
+  padding-left: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__submenu p {
+  padding: 1rem 0;
+}
+
+.sidebar__submenu a {
+  padding: 0;
+}
+
+.sidebar__submenu a:hover {
+  transform: none;
+  /* Không tăng kích thước submenu khi hover */
+}

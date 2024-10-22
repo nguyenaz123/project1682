@@ -29,6 +29,10 @@ import { loadStripe } from "@stripe/stripe-js";
 import OrderSuccess from "./component/Cart/OrderSuccess.js";
 import MyOrders from "./component/Order/MyOrders.js";
 import OrderDetails from "./component/Order/OrderDetails.js";
+import Dashboard from "./component/Admin/Dashboard.js";
+import ProductList from "./component/Admin/ProductList.js";
+import CreateProduct from './component/Admin/CreateProduct';
+
 
 
 function App() {
@@ -79,6 +83,15 @@ function App() {
         <Route path="/success" element={<ProtectedRoute element={<OrderSuccess />} />} />
         <Route path="/orders" element={<ProtectedRoute element={<MyOrders />} />} />
         <Route path="/order/:id" element={<ProtectedRoute element={<OrderDetails />} />} />
+
+
+
+        <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true} element={<Dashboard />} />} />
+        <Route path="/admin/products" element={<ProtectedRoute isAdmin={true} element={<ProductList />} />} />
+        <Route path="/admin/product" element={<ProtectedRoute isAdmin={true} element={<CreateProduct />} />} />
+
+
+
 
 
 

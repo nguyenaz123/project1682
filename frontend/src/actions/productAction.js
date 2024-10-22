@@ -4,6 +4,8 @@ import {
   ALL_PRODUCT_FAIL, ALL_PRODUCT_REQUEST, ALL_PRODUCT_SUCCESS,
   CLEAR_ERRORS, PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS, PRODUCT_DETAILS_FAIL,
   NEW_REVIEW_REQUEST, NEW_REVIEW_SUCCESS, NEW_REVIEW_FAIL,
+  ADMIN_PRODUCT_REQUEST, ADMIN_PRODUCT_SUCCESS, ADMIN_PRODUCT_FAIL,
+  CREATE_PRODUCT_REQUEST, CREATE_PRODUCT_SUCCESS, CREATE_PRODUCT_FAIL, CREATE_PRODUCT_RESET
 
 } from "../constants/productConstants";
 
@@ -31,6 +33,29 @@ export const getProduct = (keyword="", currentPage = 1, price=[0,25000],category
     })
   }
 }
+
+
+//get products -ADMIN
+export const getProductsAdmin = () => async (dispatch)=> {
+  try {
+    dispatch({ type: ADMIN_PRODUCT_REQUEST });
+    const { data } = await axios.get("/api/v1/admin/products");
+
+    dispatch({
+      type: ADMIN_PRODUCT_SUCCESS,
+      payload: data.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_PRODUCT_FAIL,
+      payload: error.response.data.message,
+    })
+    }
+
+
+}
+
+
 export const getProductDetails = (id) => async(dispatch)=>{
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
@@ -49,6 +74,26 @@ export const getProductDetails = (id) => async(dispatch)=>{
   }
 }
 
+export const createProduct = (productData) => async(dispatch)=>{
+  try {
+    dispatch({ type: CREATE_PRODUCT_REQUEST });
+    const config = {
+      headers: { "Content-Type": "application/json" }
+    };
+    const { data } = await axios.post(`/api/v1/product/new`,productData,config);
+
+    dispatch({
+      type: CREATE_PRODUCT_SUCCESS,
+      payload: data,
+    })
+
+  } catch (error) {
+    dispatch({
+      type: CREATE_PRODUCT_FAIL,
+      payload: error.response.data.message
+    })
+  }
+}
 
 
 export const newReview = (reviewData) => async(dispatch)=>{
