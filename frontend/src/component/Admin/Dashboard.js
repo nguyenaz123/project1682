@@ -18,6 +18,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { getAllOrders } from '../../actions/orderAction';
 
 ChartJS.register(
   CategoryScale,
@@ -34,7 +35,8 @@ ChartJS.register(
 const Dashboard = () => {
   const dispatch = useDispatch();
 
-  const {products} = useSelector((state) => state.products);
+  const { products } = useSelector((state) => state.products);
+  const { orders } = useSelector((state) => state.allOrders);
   let outOfStock = 0;
 
   products && products.forEach((item) => {
@@ -43,6 +45,7 @@ const Dashboard = () => {
     }
   });
   useEffect(() => {
+    dispatch(getAllOrders())
     dispatch(getProductsAdmin());
   }, [dispatch]);
 
@@ -88,7 +91,7 @@ const doughnutState = {
           </Link>
           <Link to='/admin/orders'>
             <p>Orders</p>
-            <p>50</p>
+            <p>{orders && orders.length}</p>
           </Link>
         </div>
 

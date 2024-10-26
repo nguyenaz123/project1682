@@ -4,7 +4,7 @@ import {thunk} from "redux-thunk";
 import { createProductReducer, newReviewReducer, productDetalsReducer, productReducer, productsReducer } from "./reducers/productReducer";
 import { forgotPasswordReducer, profileReducer, userReducer } from "./reducers/userReducer";
 import { cartReducer } from "./reducers/cartReducer";
-import {myOrdersReducer, newOrderReducer, orderDetailsReducer} from "./reducers/orderReducer";
+import {allOrdersReducer, myOrdersReducer, newOrderReducer, orderDetailsReducer, orderReducer} from "./reducers/orderReducer";
 
 // Combine reducers
 const reducer = combineReducers({
@@ -20,6 +20,8 @@ const reducer = combineReducers({
     newReview: newReviewReducer,
     newProduct: createProductReducer,
     product: productReducer,
+    allOrders: allOrdersReducer,
+    order: orderReducer,
 
 });
 // Initial state
