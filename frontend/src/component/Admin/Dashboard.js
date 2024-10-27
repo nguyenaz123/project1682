@@ -19,6 +19,7 @@ import {
   Legend,
 } from 'chart.js';
 import { getAllOrders } from '../../actions/orderAction';
+import { getAllUsers } from '../../actions/userAction';
 
 ChartJS.register(
   CategoryScale,
@@ -37,6 +38,8 @@ const Dashboard = () => {
 
   const { products } = useSelector((state) => state.products);
   const { orders } = useSelector((state) => state.allOrders);
+  const { users } = useSelector((state) => state.allUsers);
+
   let outOfStock = 0;
 
   products && products.forEach((item) => {
@@ -47,6 +50,7 @@ const Dashboard = () => {
   useEffect(() => {
     dispatch(getAllOrders())
     dispatch(getProductsAdmin());
+    dispatch(getAllUsers());
   }, [dispatch]);
 
 const lineState = {
@@ -87,7 +91,7 @@ const doughnutState = {
           </Link>
           <Link to='/admin/users'>
             <p>Users</p>
-            <p>50</p>
+            <p>{users && users.length}</p>
           </Link>
           <Link to='/admin/orders'>
             <p>Orders</p>
