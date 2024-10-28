@@ -65,6 +65,11 @@ const UsersList = () => {
       headerName: "Role",
       minWidth: 150,
       flex: 0.3,
+      cellClassName: (params) => {
+        return params.row.role === "admin"
+          ? "greenColor"
+          : "redColor";
+      },
     },
 
 

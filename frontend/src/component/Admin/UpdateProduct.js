@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { DataGrid } from "@mui/x-data-grid";
 import "./UpdateProduct.css";
 import { useSelector, useDispatch } from "react-redux";
 import { updateProduct, clearErrors, getProductDetails} from "../../actions/productAction";
@@ -14,6 +13,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import StorageIcon from "@mui/icons-material/Storage";
 import SpellcheckIcon from "@mui/icons-material/Spellcheck";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+
 import { UPDATE_PRODUCT_RESET} from '../../constants/productConstants';
 
 
