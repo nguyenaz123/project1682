@@ -53,6 +53,12 @@ const Dashboard = () => {
     dispatch(getAllUsers());
   }, [dispatch]);
 
+  let totalNumber = 0;
+  orders && orders.forEach(item => {
+    totalNumber += item.totalPrice
+  })
+  const totalAmount = parseFloat(totalNumber.toFixed(2));
+
 const lineState = {
   labels: ["Initial amount", "Amount Earned"],
   datasets: [
@@ -60,7 +66,7 @@ const lineState = {
       label: "TOTAL AMOUNT",
       backgroundColor: "tomato",
       hoverBackgroundColor: "rgb(197, 72, 49)",
-      data: [0, 400],
+      data: [0, totalNumber],
     },
   ],
   };
@@ -81,7 +87,7 @@ const doughnutState = {
       <div className='dashboardSummary'>
         <div>
           <p>
-            Total amount <br /> $2000
+            Total amount <br /> $ {totalAmount}
           </p>
         </div>
         <div className='dashboardSummaryBox2'>

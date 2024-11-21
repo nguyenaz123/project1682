@@ -90,19 +90,17 @@ const ProductDetails = () => {
           <Fragment>
       <MetaData title={`${product.name}---DETAILS`}/>
       <div className="ProductDetails">
-        <div>
-          <Carousel>
-                {product.images &&
-                  product.images.map((item, i) => (
-                    <img
-                      className="CarouselImage"
-                      key={i}
-                      src={item.url}
-                      alt={`${i} Slide`}
-                    />
-                  ))}
-              </Carousel>
-        </div>
+          <div className="imageGrid">
+        {product.images &&
+          product.images.map((item, i) => (
+            <img
+              className="CarouselImage"
+              key={i}
+              src={item.url}
+              alt={`${i} Slide`}
+            />
+      ))}
+  </div>
         <div>
           <div className="detailsBlock-1">
             <h2>{product.name}</h2>
@@ -117,7 +115,7 @@ const ProductDetails = () => {
 
           </div>
           <div className="detailsBlock-3">
-            <h1>{product.price}</h1>
+            <h1>$ {product.price}</h1>
             <div className="detailsBlock-3-1">
               <div className="detailsBlock-3-1-1">
                 <button onClick={decreaseQuantity}>-</button>

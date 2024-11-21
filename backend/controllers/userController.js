@@ -6,26 +6,37 @@ const sendEmail = require("../utils/sendEmail.js");
 const crypto = require("crypto");
 const cloudinary = require("cloudinary");
 
-//Register an User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-        folder: "avatar",
-        width: 150,
-        crop: "scale",
-    })
-    const {name, email,password} = req.body;
+    let myCloud;
+
+    // Kiểm tra xem người dùng có upload avatar không
+    if (req.body.avatar) {
+        // Nếu có avatar, upload lên Cloudinary
+        myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+            folder: "avatar",
+            width: 150,
+            crop: "scale",
+        });
+    } else {
+        myCloud = {
+            public_id: "default_avatar", // Bạn có thể thay đổi `default_avatar` theo Cloudinary của bạn
+            secure_url: "https://asset.cloudinary.com/dyeq1hzrg/7f707dc93cc6d1b2e1a7fd3ba74365f9", // Đường dẫn đến ảnh mặc định
+        };
+    }
+
+    const { name, email, password } = req.body;
+
+    // Tạo người dùng
     const user = await User.create({
         name,
         email,
         password,
-        avatar:{
+        avatar: {
             public_id: myCloud.public_id,
-            url: myCloud.secure_url
+            url: myCloud.secure_url,
         },
     });
-    sendToken(user,201,res);
-
-
+    sendToken(user, 201, res);
 });
 
 //Login User

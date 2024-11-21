@@ -15,12 +15,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
 
 //Route imports
-const product =require("./routes/productRoute");
+const product = require("./routes/productRoute");
+const category =require("./routes/categoryRoute");
 const user = require("./routes/userRoute");
 const order = require("./routes/orderRoute");
 const payment = require("./routes/paymentRoute");
 
-app.use("/api/v1",product);
+app.use("/api/v1", product);
+app.use("/api/v1",category);
 app.use("/api/v1", user);
 app.use("/api/v1", order);
 app.use("/api/v1/",payment)

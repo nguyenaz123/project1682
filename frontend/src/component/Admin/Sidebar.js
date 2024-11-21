@@ -46,6 +46,7 @@ const Sidebar = () => {
         )}
       </div>
 
+
       <Link to="/admin/orders">
         <p>
           <ListAltIcon /> Orders
@@ -61,6 +62,21 @@ const Sidebar = () => {
           <RateReviewIcon /> Reviews
         </p>
       </Link>
+      <div className="sidebar__products">
+        <p onClick={toggleProducts}>
+          <ImportExportIcon /> Categories {isProductsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </p>
+        {isProductsOpen && (
+          <div className="sidebar__submenu">
+            <Link to="/admin/categories">
+              <p><PostAddIcon /> All Categories</p>
+            </Link>
+            <Link to="/admin/category">
+              <p><AddIcon /> Create Category</p>
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,8 +1,9 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import "./Shipping.css";
 import { useAlert } from 'react-alert';
 import { useSelector, useDispatch } from 'react-redux';
 import { saveShippingInfo } from '../../actions/cartAction.js';
+import { getUser } from '../../actions/userAction';
 import MetaData from '../layout/MetaData.js';
 import HomeIcon from "@mui/icons-material/Home";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -37,6 +38,8 @@ const Shipping = () => {
     )
     navigate("/order/confirm")
   }
+
+
   return  <Fragment>
       <MetaData title="Shipping Details" />
 

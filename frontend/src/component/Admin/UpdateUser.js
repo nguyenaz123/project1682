@@ -6,7 +6,7 @@ import MetaData from "../layout/MetaData";
 import MailOutlineIcon from "@mui/icons-material/MailLockOutlined";
 import PersonIcon from "@mui/icons-material/Person";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
-import SideBar from "./Sidebar";
+import Sidebar from "./Sidebar";
 import { UPDATE_USER_RESET } from "../../constants/userConstants";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -15,7 +15,6 @@ import {
   clearErrors,
 } from "../../actions/userAction";
 import Loader from "../layout/Loader/Loader";
-import "./UpdateUser.css";
 
 const UpdateUser = () => {
   const dispatch = useDispatch();
@@ -37,10 +36,14 @@ const UpdateUser = () => {
 
   const userId = id;
 
+
+    useEffect(() => {
+    dispatch(getUserDetails(id));
+    }, [dispatch, id]);
+
+
   useEffect(() => {
-    if (user && user._id !== userId) {
-      dispatch(getUserDetails(userId));
-    } else {
+    if (user){
       setName(user.name);
       setEmail(user.email);
       setRole(user.role);
@@ -70,16 +73,16 @@ const UpdateUser = () => {
     myForm.set("name", name);
     myForm.set("email", email);
     myForm.set("role", role);
-
     dispatch(updateUser(userId, myForm));
+    dispatch(getUserDetails(userId));
   };
 
    return (
     <Fragment>
       <MetaData title="Update User" />
       <div className="dashboard">
-        <SideBar />
-        <div className="newProductContainer">
+        <Sidebar />
+        <div className="createProductContainer">
           {loading ? (
             <Loader />
           ) : (

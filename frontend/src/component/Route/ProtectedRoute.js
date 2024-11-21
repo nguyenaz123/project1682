@@ -11,7 +11,7 @@ const ProtectedRoute = ({ isAdmin, element: Component }) => {
     return <Navigate to="/login" />;
   }
   if (isAdmin === true && user.role !== 'admin') {
-    return <Navigate to="/login" />;
+    return <Navigate to="/NotAccess" />;
   }
 
   return Component;

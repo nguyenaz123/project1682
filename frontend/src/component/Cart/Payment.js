@@ -11,7 +11,8 @@ import './Payment.css'
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EventIcon from "@mui/icons-material/Event";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
-import {createOrder,clearErrors} from "../../actions/orderAction"
+import { createOrder, clearErrors } from "../../actions/orderAction";
+import { clearCart } from '../../actions/cartAction';
 
 const Payment = () => {
   const navigate = useNavigate();
@@ -74,8 +75,9 @@ const Payment = () => {
             id: result.paymentIntent.id,
             status: result.paymentIntent.status,
           }
-          dispatch(createOrder(order))
-          navigate("/success")
+          dispatch(createOrder(order));
+          navigate("/success");
+          dispatch(clearCart());
 
         } else {
           alert.error("There is some error");

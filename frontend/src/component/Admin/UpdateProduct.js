@@ -1,7 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import "./UpdateProduct.css";
 import { useSelector, useDispatch } from "react-redux";
-import { updateProduct, clearErrors, getProductDetails} from "../../actions/productAction";
+import { updateProduct, clearErrors, getProductDetails } from "../../actions/productAction";
+import { getAllCategories } from '../../actions/categoryAction';
 import { Link, useParams } from "react-router-dom";
 import { useAlert } from "react-alert";
 import  MetaData  from "../layout/MetaData";
@@ -21,35 +22,39 @@ const UpdateProduct = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
   const { loading, error: updateError, isUpdated } = useSelector((state) => state.product);
+  const {categories} = useSelector((state) => state.categories)
   const {error, product} = useSelector((state) => state.productDetails);
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+  const [categoryId, setCategoryId] = useState("");
   const [Stock, setStock] = useState(0);
   const [images, setImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
   const [oldImages, setOldImages] = useState([]);
   const navigate = useNavigate();
-  const {id} = useParams();
+  const { id } = useParams();
 
 
-  const categories = [
-  "Laptop",
-  "Phone",
-  "Camera"
-];
+
+    useEffect(() => {
+    dispatch(getAllCategories());
+  }, [dispatch]);
+    useEffect(() => {
+    dispatch(getProductDetails(id));
+    }, [dispatch, id]);
+
   useEffect(() => {
-    if (product && product._id !== id) {
-      dispatch(getProductDetails(id))
-    }
-    else {
+
+    if (product){
       setName(product.name);
       setDescription(product.description);
       setPrice(product.price);
-      setCategory(product.category);
       setStock(product.Stock);
       setOldImages(product.images);
+      if (product.category) {
+      setCategoryId(product.category._id);
+    }
     }
     if (error) {
       alert.error(error);
@@ -65,7 +70,7 @@ const UpdateProduct = () => {
       dispatch({ type: UPDATE_PRODUCT_RESET });
     }
 
-  }, [dispatch, alert, error,isUpdated, navigate, , product, id, updateError]);
+  }, [dispatch, alert, error,isUpdated, navigate,categories,  product, id, updateError]);
 
   const updateProductHandler = (e) => {
     e.preventDefault();
@@ -73,7 +78,7 @@ const UpdateProduct = () => {
     myForm.set("name", name);
     myForm.set("price", price);
     myForm.set("description", description);
-    myForm.set("category", category);
+    myForm.set("categoryId", categoryId);
     myForm.set("Stock", Stock);
 
     images.forEach((image) => {
@@ -133,16 +138,16 @@ const UpdateProduct = () => {
 
             <div>
               <AccountTreeIcon />
-              <select value={category}
-                onChange={(e) => setCategory(e.target.value)}>
+            <select
+                onChange={(e) => setCategoryId(e.target.value)}
+                value={categoryId}>
                 <option value="">Choose Category</option>
                 {categories.map((cate) => (
-                  <option key={cate} value={cate}>
-                    {cate}
+                  <option key={cate._id} value={cate._id}>
+                    {cate.name}
                   </option>
                 ))}
               </select>
-
             </div>
             <div>
               <StorageIcon />

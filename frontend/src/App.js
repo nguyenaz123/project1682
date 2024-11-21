@@ -3,9 +3,9 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import WebFont from "webfontloader";
-import { getUser } from './actions/userAction';
+import { getUser } from './actions/userAction.js';
 import './App.css';
 import CreateProduct from './component/Admin/CreateProduct.js';
 import Dashboard from "./component/Admin/Dashboard.js";
@@ -30,24 +30,32 @@ import OrderDetails from "./component/Order/OrderDetails.js";
 import ProductDetails from "./component/Product/ProductDetails.js";
 import Products from "./component/Product/Products.js";
 import Search from "./component/Product/Search.js";
-import ProtectedRoute from './component/Route/ProtectedRoute';
+import ProtectedRoute from './component/Route/ProtectedRoute.js';
 import ForgotPassword from "./component/User/ForgotPassword.js";
-import LoginRegister from './component/User/LoginRegister';
+import LoginRegister from './component/User/LoginRegister.js';
 import Profile from "./component/User/Profile.js";
 import ResetPassword from "./component/User/ResetPassword.js";
 import UpdatePassword from "./component/User/UpdatePassword.js";
 import UpdateProfile from "./component/User/UpdateProfile.js";
-import store from "./store";
+import CategoriesList from './component/Admin/CategoriesList.js';
+import CreateCategory from './component/Admin/CreateCategory.js';
+import UpdateCategory from './component/Admin/UpdateCategory.js';
+import NotFoundPage from './component/layout/NotFoundPage/NotFoundPage.js';
+import NotAccess from './component/layout/NotAccess/NotAccess.js';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor, store } from "./store.js";
+
 
 
 
 function App() {
-  const { isAuthenticated, user } = useSelector(state => state.user);
+  const { isAuthenticated,loading, user } = useSelector(state => state.user);
   const [stripeApiKey, setStripeApiKey] = useState("");
 
   async function getStripeApiKey() {
     const { data } = await axios.get("/api/v1/stripeapikey");
     setStripeApiKey(data.stripeApiKey);
+
   }
 
   useEffect(() => {
@@ -57,16 +65,24 @@ function App() {
       },
     });
     store.dispatch(getUser());
-    getStripeApiKey();
+
   }, []);
+
+useEffect(() => {
+  if (isAuthenticated) {
+    getStripeApiKey();
+  }
+
+}, [isAuthenticated]);
 
   return (
     <Router>
+      <PersistGate loading={null} persistor={persistor}>
       <Header />
       {isAuthenticated && <UserOptions user={user} />}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/product/:id" element={<ProductDetails />}/>
         <Route path="/products" element={<Products />} />
         <Route path="/products/:keyword" element={<Products />} />
         <Route path="/account" element={<ProtectedRoute element={<Profile />} />} />
@@ -107,6 +123,23 @@ function App() {
         <Route path="/admin/users" element={<ProtectedRoute isAdmin={true} element={<UsersList />} />} />
         <Route path="/admin/user/:id" element={<ProtectedRoute isAdmin={true} element={<UpdateUser />} />} />
         <Route path="/admin/reviews" element={<ProtectedRoute isAdmin={true} element={<Reviews />} />} />
+        <Route path="/admin/categories" element={<ProtectedRoute isAdmin={true} element={<CategoriesList />} />} />
+        <Route path="/admin/category" element={<ProtectedRoute isAdmin={true} element={<CreateCategory />} />} />
+        <Route path="/admin/category/:id" element={<ProtectedRoute isAdmin={true} element={<UpdateCategory />} />} />
+
+        <Route
+          path="*"
+          element={
+          <NotFoundPage />
+          }
+        />
+
+           <Route
+          path="/NotAccess"
+          element={
+          <NotAccess />
+          }
+        />
 
 
 
@@ -123,12 +156,20 @@ function App() {
 
 
 
+
+
+
+
+
+        <Route element={<NotFoundPage />} />
 
 
         <Route path="/search" element={<Search />} />
         <Route path="/login" element={<LoginRegister />} />
       </Routes>
-      <Footer />
+
+        <Footer />
+        </PersistGate>
     </Router>
   );
 }
