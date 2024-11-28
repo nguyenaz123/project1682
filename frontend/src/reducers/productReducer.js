@@ -104,7 +104,7 @@ export const createProductReducer = (state = {product: {} }, action) => {
           case CLEAR_ERRORS:
         return {
           ...state,
-          error:null
+          error: null,
           }
 
       default:

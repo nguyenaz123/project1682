@@ -39,7 +39,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: [ "user"], // Chỉ lưu trữ `cart` và `user`
+    whitelist: [ "user","cart"], // Chỉ lưu trữ `cart` và `user`
 };
 
 // Tạo persisted reducer
@@ -47,14 +47,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // Initial state
 let initialState = {
-    cart: {
-        cartItems: localStorage.getItem("cartItems")
-            ? JSON.parse(localStorage.getItem("cartItems"))
-            : [],
-        shippingInfo: localStorage.getItem("shippingInfo")
-            ? JSON.parse(localStorage.getItem("shippingInfo"))
-            : {}
-    },
+
 };
 
 // Middleware

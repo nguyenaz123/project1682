@@ -12,6 +12,7 @@ import { useAlert } from 'react-alert';
 import { logout } from "../../../actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
 import Backdrop from '@mui/material/Backdrop';
+import { getCart } from '../../../actions/cartAction';
 const UserOptions = ({ user }) => {
   const {cartItems} = useSelector((state)=>state.cart)
   const [open, setOpen] = useState(false);
@@ -23,10 +24,10 @@ const UserOptions = ({ user }) => {
     { icon: <PersonIcon />, name: "Profile", func: account },
     {icon: (
         <ShoppingCartIcon
-          style={{ color: cartItems.length > 0 ? "tomato" : "unset" }}
+          style={{ color: cartItems.products.length > 0 ? "tomato" : "unset" }}
         />
       ),
-      name: `Cart(${cartItems.length})`,
+      name: `Cart(${cartItems.products.length})`,
       func: cart,
     },
 
@@ -51,7 +52,7 @@ const UserOptions = ({ user }) => {
     navigate("/account")
   }
     function cart() {
-    navigate("/cart")
+      navigate("/cart")
   }
   function logoutUser() {
     dispatch(logout())

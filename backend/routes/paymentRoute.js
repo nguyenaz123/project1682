@@ -8,5 +8,4 @@ router.route("/stripeapikey").get(isAuthenticatedUser, sendStripeApiKey);
 
 
 
-
 module.exports = router

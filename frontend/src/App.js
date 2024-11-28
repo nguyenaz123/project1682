@@ -1,3 +1,5 @@
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor, store } from "./store.js";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from "@stripe/stripe-js";
 import axios from 'axios';
@@ -42,22 +44,15 @@ import CreateCategory from './component/Admin/CreateCategory.js';
 import UpdateCategory from './component/Admin/UpdateCategory.js';
 import NotFoundPage from './component/layout/NotFoundPage/NotFoundPage.js';
 import NotAccess from './component/layout/NotAccess/NotAccess.js';
-import { PersistGate } from 'redux-persist/integration/react';
-import { persistor, store } from "./store.js";
-
-
 
 
 function App() {
   const { isAuthenticated,loading, user } = useSelector(state => state.user);
   const [stripeApiKey, setStripeApiKey] = useState("");
-
   async function getStripeApiKey() {
     const { data } = await axios.get("/api/v1/stripeapikey");
     setStripeApiKey(data.stripeApiKey);
-
   }
-
   useEffect(() => {
     WebFont.load({
       google: {
@@ -65,14 +60,11 @@ function App() {
       },
     });
     store.dispatch(getUser());
-
   }, []);
-
 useEffect(() => {
   if (isAuthenticated) {
     getStripeApiKey();
   }
-
 }, [isAuthenticated]);
 
   return (

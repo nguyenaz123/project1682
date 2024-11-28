@@ -5,7 +5,8 @@ import Loader from '../layout/Loader/Loader';
 import MetaData from '../layout/MetaData';
 import "./Home.css";
 import ProductCard from "./ProductCard.js";
-import {useAlert} from "react-alert";
+import { useAlert } from "react-alert";
+
 
 
 
@@ -13,7 +14,8 @@ import {useAlert} from "react-alert";
 const Home = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
-  const {loading, error, products } = useSelector((state) => state.products);
+  const { loading, error, products } = useSelector((state) => state.products);
+
   useEffect(() => {
     if (error) {
       alert.error(error);
@@ -22,6 +24,7 @@ const Home = () => {
     }
     dispatch(getProduct())
   }, [dispatch, error])
+
   return  <Fragment>
       {loading ? (
         <Loader />

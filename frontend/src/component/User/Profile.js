@@ -1,21 +1,34 @@
 import React, { Fragment, useEffect } from 'react';
-import MetaData from "../layout/MetaData";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import Loader from "../layout/Loader/Loader"
-import "./Profile.css"
-
+import { getCart } from '../../actions/cartAction';
+import { ADD_TO_CART_RESET } from "../../constants/cartConstants";
+import Loader from "../layout/Loader/Loader";
+import MetaData from "../layout/MetaData";
+import "./Profile.css";
 
 const Profile = () => {
-
   const { user, loading, isAuthenticated } = useSelector((state) => state.user);
+  const {loading: cartLoading, success: cartSuccess} = useSelector((state) => state.cart);
   const navigate = useNavigate()
+  const dispatch = useDispatch();
+
+    useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(getCart())
+    }
+    },[isAuthenticated]);
   useEffect(() => {
     if (isAuthenticated === false)
     {
       navigate("/login")
   }
-  },[isAuthenticated])
+  }, [isAuthenticated])
+      useEffect(() => {
+    if (cartLoading==false && cartSuccess == true) {
+      dispatch({ type: ADD_TO_CART_RESET });
+    }
+  },[loading, cartSuccess])
 return (
     <Fragment>
       {loading ? (

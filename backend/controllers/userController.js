@@ -42,12 +42,8 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 //Login User
 exports.loginUser = catchAsyncErrors( async (req, res, next) =>{
     const {email, password} = req.body;
-
-
-    //check if user has given password and email both
     if(!email || !password){
         return next(new ErrorHandler("Please Enter Email and Password",400))
-
     }
     const user = await User.findOne({email}).select("+password");
     if(!user){
@@ -58,12 +54,9 @@ exports.loginUser = catchAsyncErrors( async (req, res, next) =>{
         return next(new ErrorHandler("Invalid Email or Password",401));
     }
     sendToken(user,201,res);
-
-
 });
 
 //Logout User
-
 exports.logout = catchAsyncErrors(async (req,res,next) => {
     res.cookie("token",null, {
         expires:new Date(Date.now()),
@@ -81,9 +74,6 @@ const user =await User.findOne({email:req.body.email});
 if(!user){
     return next(new ErrorHandler("User not found",404));
 }
-
-
-//Get ResetPassword Token
 const resetToken = user.getResetPasswordToken();
 await user.save({validateBeforeSave:false});
 const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`

@@ -12,6 +12,7 @@ import { addToCart } from "../../actions/cartAction";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 import { Rating } from '@mui/material'
 import { NEW_REVIEW_RESET } from '../../constants/productConstants';
+import { ADD_TO_CART_RESET } from '../../constants/cartConstants';
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const { product, loading, error } = useSelector((state) => state.productDetails);
   const { success, error: reviewError } = useSelector((state) => state.newReview);
+  const {error: errorAddToCart, success: successAddToCart } = useSelector((state) => state.cart);
   const [quantity, setQuantity] = useState(1)
   const [open, setOpen] = useState(false)
   const [rating, setRating] = useState(0)
@@ -57,24 +59,34 @@ const ProductDetails = () => {
   }
   const addToCartProcess = () => {
     dispatch(addToCart(id, quantity))
-    alert.success("Add to cart successfully")
-
   }
+
   useEffect(() => {
     if (error) {
       alert.error(error);
       dispatch(clearErrors());
     }
+
     if (reviewError) {
       alert.error(reviewError);
       dispatch(clearErrors());
     }
+
+    if (errorAddToCart) {
+      alert.error(errorAddToCart);
+      dispatch(clearErrors());
+    }
+    if (successAddToCart) {
+    alert.success("Add to cart successfully");
+    dispatch({ type: ADD_TO_CART_RESET });
+  }
+
     if (success) {
       alert.success("review submitted successfully");
       dispatch({ type: NEW_REVIEW_RESET });
     }
     dispatch(getProductDetails(id));
-  }, [dispatch, id, error, alert, reviewError, success]);
+  }, [dispatch, id, error, alert,errorAddToCart,successAddToCart, reviewError, success]);
   if (!product || !product.images) return <p>No product details available</p>;
   const options = {
     size: "large",

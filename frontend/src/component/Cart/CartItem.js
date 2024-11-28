@@ -8,9 +8,9 @@ const CartItem = ({item, removeItems}) => {
     <div className="CartItem">
       <img src={item.image} alt="sss" />
       <div>
-        <Link to={`/product/${item.product}`}>{item.name}</Link>
+        <Link to={`/product/${item.productId}`}>{item.name}</Link>
         <span>{`Price: ${item.price}`}</span>
-        <p onClick={()=>removeItems(item.product)}>Remove</p>
+        <p onClick={()=>removeItems(item.productId)}>Remove</p>
       </div>
 
     </div>
