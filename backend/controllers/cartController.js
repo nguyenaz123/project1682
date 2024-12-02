@@ -61,18 +61,22 @@ exports.addItemToCart = catchAsyncErrors(async (req, res, next) => {
 exports.getCartByUserId = catchAsyncErrors(async (req, res, next) => {
     const userId = req.user.id;
     let cart = await Cart.findOne({ userId }).populate("products.productId");
+
     if (!cart) {
         cart = {
             userId,
             products: [],
         };
+    } else {
+        cart.products = cart.products.filter(item => item.productId !== null);
+        await cart.save();
     }
+
     res.status(200).json({
         success: true,
         cart,
     });
 });
-
 
 exports.updateCartItem = catchAsyncErrors(async (req, res, next) => {
     const { productId, quantity } = req.body;
@@ -93,7 +97,7 @@ exports.updateCartItem = catchAsyncErrors(async (req, res, next) => {
     if (quantity > 0) {
         cart.products[itemIndex].quantity = quantity;
     } else {
-        cart.products.splice(itemIndex, 1); // Xóa sản phẩm nếu quantity = 0
+        cart.products.splice(itemIndex, 1);
     }
 
     await cart.save();

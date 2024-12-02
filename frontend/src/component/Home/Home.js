@@ -30,7 +30,7 @@ const Home = () => {
         <Loader />
       ) : (
         <Fragment>
-          <MetaData title="CR7" />
+          <MetaData title="TechShopping" />
 
           <div className="banner">
             <p>Welcome to my Store</p>

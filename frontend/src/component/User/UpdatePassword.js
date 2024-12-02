@@ -40,7 +40,7 @@ const navigate = useNavigate();
     }
 
     if (isUpdated) {
-      alert.success("Profile Updated Successfully");
+      alert.success("Change Password Successfully");
 
       navigate("/account");
 

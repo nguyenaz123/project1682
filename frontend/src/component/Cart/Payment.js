@@ -1,24 +1,24 @@
-import React, { Fragment, useRef, useEffect } from "react";
-import CheckOutSteps from "./CheckOutSteps";
-import { useSelector, useDispatch } from "react-redux";
-import MetaData from "../layout/MetaData";
-import { Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useAlert } from "react-alert";
-import {
-  CardNumberElement,
-  CardCvcElement,
-  CardExpiryElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
-import axios from "axios";
-import "./Payment.css";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import EventIcon from "@mui/icons-material/Event";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
-import { createOrder, clearErrors } from "../../actions/orderAction";
+import { Typography } from "@mui/material";
+import {
+  CardCvcElement,
+  CardExpiryElement,
+  CardNumberElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import axios from "axios";
+import React, { Fragment, useEffect, useRef } from "react";
+import { useAlert } from "react-alert";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { clearCart } from "../../actions/cartAction";
+import { clearErrors, createOrder } from "../../actions/orderAction";
+import MetaData from "../layout/MetaData";
+import CheckOutSteps from "./CheckOutSteps";
+import "./Payment.css";
 
 const Payment = () => {
   const navigate = useNavigate();
@@ -159,7 +159,7 @@ const Payment = () => {
           </div>
           <input
             type="submit"
-            value={`Pay - ₹${orderInfo && orderInfo.totalPrice}`}
+            value={`Pay - $ ${orderInfo && orderInfo.totalPrice}`}
             ref={payBtn}
             className="paymentFormBtn"
           />

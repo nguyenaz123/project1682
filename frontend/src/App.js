@@ -44,6 +44,8 @@ import CreateCategory from './component/Admin/CreateCategory.js';
 import UpdateCategory from './component/Admin/UpdateCategory.js';
 import NotFoundPage from './component/layout/NotFoundPage/NotFoundPage.js';
 import NotAccess from './component/layout/NotAccess/NotAccess.js';
+import Blog from './component/layout/Blog/Blog.js';
+import Contact from './component/layout/ContactPage/Contact';
 
 
 function App() {
@@ -123,6 +125,19 @@ useEffect(() => {
           path="*"
           element={
           <NotFoundPage />
+          }
+          />
+
+        <Route
+          path="/blog"
+          element={
+          <Blog />
+          }
+          />
+           <Route
+          path="/contact"
+          element={
+          <Contact />
           }
         />
 

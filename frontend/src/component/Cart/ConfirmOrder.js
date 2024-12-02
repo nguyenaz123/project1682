@@ -72,8 +72,8 @@ const ConfirmOrder = () => {
                       {item.productId.name}
                     </Link>{" "}
                     <span>
-                      {item.quantity} X ₹{item.productId.price} ={" "}
-                      <b>₹{item.quantity * item.productId.price}</b>
+                      {item.quantity} X $ {item.productId.price} ={" "}
+                      <b>$ {item.quantity * item.productId.price}</b>
                     </span>
                   </div>
                 ))}
@@ -87,22 +87,22 @@ const ConfirmOrder = () => {
             <div>
               <div>
                 <p>Subtotal: </p>
-                <span>₹{subTotal}</span>
+                <span>$ {subTotal}</span>
               </div>
               <div>
                 <p>Shipping Charges: </p>
-                <span>₹{shippingCharges}</span>
+                <span>$ {shippingCharges}</span>
               </div>
               <div>
                 <p>GST: </p>
-                <span>₹{tax}</span>
+                <span>$ {tax}</span>
               </div>
             </div>
             <div className="orderSummaryTotal">
               <p>
                 <b>Total: </b>
               </p>
-              <span>₹{totalPrice}</span>
+              <span>$ {totalPrice}</span>
             </div>
             <button onClick={proceedToPayment}>Proceed to Payment</button>
           </div>

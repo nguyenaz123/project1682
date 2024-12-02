@@ -1,19 +1,137 @@
 .productHeading {
   margin: 2vmax auto;
-    width: 15vw;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.171);
-    padding: 2vmax;
-    color: rgba(0, 0, 0, 0.678);
-    font: 500 1.5vmax "Roboto";
-    text-align: center;
+  width: 15vw;
+  border-bottom: 2px solid #e74c3c;
+  padding: 2vmax;
+  color: #2c3e50;
+  font: 600 1.5vmax "Roboto";
+  text-align: center;
 }
+
+.products-container {
+  display: flex;
+  gap: 2vmax;
+  padding: 2vmax 5vmax;
+  position: relative;
+}
+
 .products {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
-  padding: 0 5vmax;
-  justify-content: center;
+  gap: 2vmax;
+  justify-content: flex-start;
   min-height: 30vh;
 }
+
+/* Filter Box Styles */
+.filterBox {
+  width: 15vmax;
+  position: top;
+  top: 10vmax;
+  height: fit-content;
+  background: white;
+  padding: 2vmax;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+.filterSection {
+  margin-bottom: 2vmax;
+  padding-bottom: 1.5vmax;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.filterSection:last-child {
+  border-bottom: none;
+}
+
+.filterBox>h6 {
+  font: 600 1.2vmax "Roboto";
+  color: #2c3e50;
+  margin-bottom: 1.5vmax;
+}
+
+.filterBox>fieldset {
+  border: none;
+}
+
+/* Category Styles */
+.categoryBox {
+  padding: 0;
+  margin: 1vmax 0;
+}
+
+.category-link {
+  list-style: none;
+  color: #666;
+  font: 400 1vmax "Roboto";
+  padding: 0.8vmax 1vmax;
+  margin: 0.4vmax 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.category-link:hover {
+  color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.08);
+  padding-left: 1.5vmax;
+}
+
+.category-link.active {
+  color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.08);
+  font-weight: 500;
+}
+
+/* Slider Styles */
+.filterBox .MuiSlider-root {
+  color: #e74c3c;
+  margin: 1vmax 0;
+}
+
+.filterBox .MuiSlider-thumb {
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border: 2px solid #e74c3c;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filterBox .MuiSlider-valueLabel {
+  background-color: #e74c3c;
+  padding: 0.5vmax;
+  font-size: 0.8vmax;
+}
+
+/* Clear Filters Button */
+.removeFiltersButton {
+  margin-top: 2vmax;
+  padding: 0.8vmax 1.5vmax;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font: 500 0.9vmax "Roboto";
+  transition: all 0.3s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5vmax;
+}
+
+.removeFiltersButton:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.2);
+}
+
+/* Pagination Styles */
 .paginationBox {
   display: flex;
   justify-content: center;
@@ -24,11 +142,14 @@
   display: flex;
   justify-content: center;
   padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
 }
+
 .page-item {
-  background-color: rgb(255, 255, 255);
+  background-color: white;
   list-style: none;
-  border: 1px solid rgba(0, 0, 0, 0.178);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   padding: 1vmax 1.5vmax;
   transition: all 0.3s;
   cursor: pointer;
@@ -44,84 +165,79 @@
 
 .page-link {
   text-decoration: none;
-  font: 300 0.7vmax "Roboto";
-  color: rgb(80, 80, 80);
+  font: 400 0.9vmax "Roboto";
+  color: #666;
   transition: all 0.3s;
 }
 
 .page-item:hover {
-  background-color: rgb(230, 230, 230);
+  background-color: rgba(231, 76, 60, 0.08);
 }
 
 .page-item:hover .page-link {
-  color: rgb(0, 0, 0);
+  color: #e74c3c;
 }
 
 .pageItemActive {
-  background-color: tomato;
+  background-color: #e74c3c;
 }
 
 .pageLinkActive {
   color: white;
 }
-.filterBox {
-  width: 10vmax;
-  position: absolute;
-  top: 10vmax;
-  left: 4vmax;
-}
-.categoryBox {
-  padding: 0%;
-}
 
-.category-link {
-  list-style: none;
-  color: rgba(0, 0, 0, 0.61);
-  font: 400 0.8vmax "Roboto";
-  margin: 0.4vmax;
-  cursor: pointer;
-  transition: all 0.5s;
-}
-
-.category-link:hover {
-  color: tomato;
-}
-
-.filterBox>fieldset {
-  border: 1px solid rgba(0, 0, 0, 0.329);
-}
-.removeFiltersButton {
-  margin-top: 1vmax;
-  padding: 0.5vmax 1.5vmax;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font: 500 0.9vmax "Roboto";
-  transition: background-color 0.3s, transform 0.3s;
-  text-align: center;
-  width: auto;
-  max-width: 100%;
-}
-
-.removeFiltersButton:hover {
-  background-color: #d32f2f;
-  transform: scale(1.03);
-}
+/* Responsive Design */
 @media screen and (max-width: 600px) {
-  .filterBox {
-    width: 20vmax;
-    position: static;
-    margin: auto;
+  .products-container {
+    flex-direction: column;
+    padding: 2vmax;
   }
-        .page-link {
-          font: 300 1.7vmax "Roboto";
-        }
 
-                .removeFiltersButton {
-                  font: 500 1.5vmax "Roboto";
-                    padding: 1vmax;
-                    width: 100%;
-                }
+  .filterBox {
+    width: 100%;
+    position: static;
+    margin-bottom: 2vmax;
+  }
+
+  .category-link {
+    font: 400 1.8vmax "Roboto";
+  }
+
+  .removeFiltersButton {
+    font: 500 1.8vmax "Roboto";
+    padding: 1.5vmax;
+  }
+
+  .products {
+    justify-content: center;
+  }
+
+  .page-link {
+    font: 300 1.7vmax "Roboto";
+  }
+
+  .filterBox>fieldset {
+    padding: 2vmax 0;
+  }
+
+  .filterBox .MuiSlider-valueLabel {
+    font-size: 1.5vmax;
+  }
+}
+
+/* Animations */
+@keyframes filterFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filterBox>* {
+  animation: filterFade 0.3s ease-out forwards;
 }

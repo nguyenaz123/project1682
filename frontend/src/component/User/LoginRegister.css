@@ -219,3 +219,62 @@
     padding: 1.8vmax;
   }
 }
+@media screen and (max-width: 1024px) {
+  .LoginRegisterBox {
+    width: 40vw;
+  }
+}
+
+/* Large Mobile */
+@media screen and (max-width: 768px) {
+  .LoginRegisterBox {
+    width: 60vw;
+  }
+}
+
+/* Existing Mobile */
+@media screen and (max-width: 600px) {
+  .LoginRegisterContainer {
+    background-color: white;
+  }
+
+  .LoginRegisterBox {
+    width: 100vw;
+    height: 95vh;
+  }
+
+  /* Giữ nguyên các styles mobile hiện có */
+}
+
+/* Small Mobile */
+@media screen and (max-width: 400px) {
+
+  .loginForm,
+  .registerForm {
+    padding: 4vmax;
+  }
+
+  .login_register_toggle>p {
+    font: 300 1.8vmax "Roboto";
+  }
+
+  #registerImage>img {
+    width: 7vmax;
+  }
+}
+
+/* Landscape Mode */
+@media screen and (max-height: 600px) {
+  .LoginRegisterBox {
+    height: 95vh;
+  }
+
+  .loginForm,
+  .registerForm {
+    padding: 2vmax;
+  }
+
+  #registerImage>input::file-selector-button {
+    height: 6vh;
+  }
+}

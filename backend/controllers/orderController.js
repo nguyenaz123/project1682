@@ -81,7 +81,6 @@ exports.getAllOrders = catchAsyncErrors(async (req, res, next) => {
 
 
 //update order --Admin
-
 exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
 
@@ -94,10 +93,16 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
   }
 
   if (req.body.status === "Shipped") {
-    order.orderItems.forEach(async (o) => {
-      await updateStock(o.product, o.quantity);
-    });
+    // Kiểm tra xem sản phẩm còn tồn tại không trước khi cập nhật stock
+    try {
+      for (const item of order.orderItems) {
+        await updateStock(item.product, item.quantity);
+      }
+    } catch (error) {
+      return next(new ErrorHandler("One or more products in this order no longer exist in the database. Cannot update stock.", 400));
+    }
   }
+
   order.orderStatus = req.body.status;
 
   if (req.body.status === "Delivered") {
@@ -113,11 +118,13 @@ exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
 async function updateStock(id, quantity) {
   const product = await Product.findById(id);
 
-  product.Stock -= quantity;
+  if (!product) {
+    throw new Error(`Product with id ${id} not found`);
+  }
 
+  product.Stock -= quantity;
   await product.save({ validateBeforeSave: false });
 }
-
 
 
 

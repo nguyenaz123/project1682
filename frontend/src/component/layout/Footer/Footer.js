@@ -13,9 +13,9 @@ const Footer = () => {
         <img src={googleplay} alt="googleplay" />
       </div>
       <div className="midFooter">
-        <h1>CR7</h1>
+        <h1>TechShopping</h1>
         <p>High quality is our first priority</p>
-        <p>Copyrights 2024 &copy; Nguyentran</p>
+        <p>Copyrights 2024 &copy; TechShopping</p>
       </div>
       <div className="rightFooter">
         <h4>Follow us</h4>

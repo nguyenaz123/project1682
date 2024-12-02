@@ -35,6 +35,7 @@ const LoginRegister = () => {
   const loginSubmit = (e) => {
     e.preventDefault();
     dispatch(login(loginEmail, loginPassword));
+
   }
 
   const registerSubmit = async (e) => {
@@ -63,7 +64,7 @@ const LoginRegister = () => {
         alert.error("Ảnh quá lớn hoặc không thể nén!");
       }
     } else {
-      dispatch(register(myForm)); // Gửi yêu cầu nếu không có avatar
+      dispatch(register(myForm));
     }
   }
 
@@ -93,6 +94,7 @@ const LoginRegister = () => {
 
     if (isAuthenticated) {
       navigate(redirect);
+      alert.success("Authenticated successfully. Welcome!");
     }
   }, [dispatch, error, alert, isAuthenticated, navigate, redirect]);
 

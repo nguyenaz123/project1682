@@ -25,22 +25,28 @@ const Products = () => {
   const { products, loading, error, productsCount, resultPerPage, filteredProductsCount } = useSelector(state => state.products);
   const { categories } = useSelector(state => state.categories);
   const { keyword } = useParams();
+
   const setCurrentPageNo = (e) => {
     setCurrentPage(e);
   };
+
   const priceHandler = (event, newPrice) => {
     setPrice(newPrice);
   }
-const removeAllFilters = () => {
+
+  const removeAllFilters = () => {
     setPrice([0, 3000]);
     setCategory("");
     setRatings(0);
     setCurrentPage(1);
   };
+
   useEffect(() => {
-  setCurrentPage(1); 
-}, [price, category, ratings]);
+    setCurrentPage(1);
+  }, [price, category, ratings]);
+
   let count = filteredProductsCount;
+
   useEffect(() => {
     dispatch(getAllCategories());
     if (error) {
@@ -49,54 +55,76 @@ const removeAllFilters = () => {
     }
     dispatch(getProduct(keyword,currentPage,price,category,ratings));
   }, [dispatch, keyword, currentPage, price,category,ratings,alert, error]);
-  return <Fragment>
-    {loading ? <Loader /> : <Fragment>
-      <MetaData title="---PRODUCTS---"/>
-      <h2 className="productHeading">Products</h2>
-      <div className="products">
-        {products && products.map((product) =>
-          <ProductCard key={product._id} product={product} />
-        )}
-      </div>
-      <div className="filterBox">
-        <Typography>Price</Typography>
-        <Slider
-          value={price}
-          onChange={priceHandler}
-          valueLabelDisplay="auto"
-          aria-labelledby='range-slider'
-          min={0}
-          max={3000}
 
-        />
-        <Typography>Categories</Typography>
-        <ul className="categoryBox">
-          {categories.map((category) => (
-            <li className="category-link" key={category._id}  onClick={() => setCategory(category._id)}>
-              {category.name}
-            </li>
-          ))}
-        </ul>
-        <fieldset>
-          <Typography component="legend">Rating Above</Typography>
-          <Slider
-            value={ratings}
-            onChange={(e, newRating) => {
-              setRatings(newRating);
-            }}
-            aria-labelledby="continuous-slider"
-            valueLabelDisplay='auto'
-            min={0}
-            max={5}
-          />
+  return (
+    <Fragment>
+      {loading ? <Loader /> : (
+        <Fragment>
+          <MetaData title="PRODUCTS -- ECOMMERCE"/>
+          <h2 className="productHeading">Products</h2>
 
-        </fieldset>
-        <button className="removeFiltersButton" onClick={removeAllFilters}>
-              Remove Filter
-            </button>
-    </div>
-      { resultPerPage < count &&  <div className='paginationBox'>
-        <Pagination
+          <div className="products-container">
+            <div className="filterBox">
+              <Typography variant="h6">Filters</Typography>
+
+              <div className="filterSection">
+                <Typography>Price Range</Typography>
+                <Slider
+                  value={price}
+                  onChange={priceHandler}
+                  valueLabelDisplay="auto"
+                  aria-labelledby='range-slider'
+                  min={0}
+                  max={3000}
+                />
+              </div>
+
+              <div className="filterSection">
+                <Typography>Categories</Typography>
+                <ul className="categoryBox">
+                  {categories.map((category) => (
+                    <li
+                      className={`category-link ${category._id === category ? 'active' : ''}`}
+                      key={category._id}
+                      onClick={() => setCategory(category._id)}
+                    >
+                      {category.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="filterSection">
+                <fieldset>
+                  <Typography component="legend">Ratings Above</Typography>
+                  <Slider
+                    value={ratings}
+                    onChange={(e, newRating) => {
+                      setRatings(newRating);
+                    }}
+                    aria-labelledby="continuous-slider"
+                    valueLabelDisplay='auto'
+                    min={0}
+                    max={5}
+                  />
+                </fieldset>
+              </div>
+
+              <button className="removeFiltersButton" onClick={removeAllFilters}>
+                Clear Filters
+              </button>
+            </div>
+
+            <div className="products">
+              {products && products.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
+          </div>
+
+          {resultPerPage < count && (
+            <div className='paginationBox'>
+              <Pagination
                 activePage={currentPage}
                 itemsCountPerPage={resultPerPage}
                 totalItemsCount={productsCount}
@@ -109,10 +137,13 @@ const removeAllFilters = () => {
                 linkClass="page-link"
                 activeClass="pageItemActive"
                 activeLinkClass="pageLinkActive"
-          />
-      </div>}
-    </Fragment>}
-  </Fragment>
-}
+              />
+            </div>
+          )}
+        </Fragment>
+      )}
+    </Fragment>
+  );
+};
 
-export default Products
+export default Products;

@@ -38,7 +38,7 @@ const Cart = () => {
     if (isAuthenticated) {
       navigate("/shipping");
     } else {
-      navigate("/login?redirect=shipping");
+      navigate("/login");
     }
   };
   useEffect(() => {
@@ -94,7 +94,7 @@ const Cart = () => {
                   </button>
                 </div>
                 <p className="cartSubtotal">
-                  ₹{item.quantity * item.productId.price}
+                  $ {item.quantity * item.productId.price}
                 </p>
               </div>
             ))}
@@ -102,7 +102,7 @@ const Cart = () => {
               <div></div>
               <div className="cartGrossTotalBox">
                 <p>Gross Total</p>
-                <p>{`₹${cartItems.products.reduce(
+                <p>{`$ ${cartItems.products.reduce(
                   (acc, item) => acc + item.quantity * item.productId.price,
                   0
                 )}`}</p>
