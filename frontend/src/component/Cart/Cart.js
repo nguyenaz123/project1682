@@ -11,15 +11,26 @@ import { ADD_TO_CART_RESET } from "../../constants/cartConstants";
 const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const alert = useAlert();
   const { cartItems, success: successAddToCart, loading } = useSelector((state) => state.cart);
   const { isAuthenticated } = useSelector((state) => state.user);
 
+  // Hàm để đảm bảo quantity không vượt quá stock
+  const getValidQuantity = (quantity, stock) => {
+    return Math.min(quantity, stock);
+  };
+
+  useEffect(() => {
+    if (successAddToCart) {
+      dispatch({ type: ADD_TO_CART_RESET });
+    }
+  }, [successAddToCart, dispatch]);
   const increaseQuantity = (id, currentQuantity, stock) => {
-    if (currentQuantity >= stock) {
+    const newQuantity = currentQuantity + 1;
+    if (newQuantity > stock) {
       return;
     }
-    const quantityToAdd = 1;
-    dispatch(addToCart(id, quantityToAdd));
+    dispatch(addToCart(id, 1));
 
   };
 
@@ -27,9 +38,10 @@ const Cart = () => {
     if (currentQuantity <= 1) {
       return;
     }
-    const quantityToAdd = -1;
-    dispatch(addToCart(id, quantityToAdd));
+    dispatch(addToCart(id, -1));
+
   };
+
   const removeItems = (id) => {
     dispatch(removeCartItem(id));
   };
@@ -41,11 +53,30 @@ const Cart = () => {
       navigate("/login");
     }
   };
+
   useEffect(() => {
-    if (loading==false) {
-      dispatch({ type: ADD_TO_CART_RESET });
+    dispatch(getCart());
+
+  cartItems.products.forEach(item => {
+    const validQuantity = getValidQuantity(item.quantity, item.productId.Stock);
+    if (validQuantity !== item.quantity) {
+      if (validQuantity === 0) {
+        dispatch(removeCartItem(item.productId._id));
+        alert.info(`Product ${item.productId.name} is out of stock and has been removed from your cart.`);
+      } else {
+        alert.info(`Updated quantity of Product ${item.productId.name} to match remaining products in stock`);
+        dispatch(addToCart(item.productId._id, validQuantity - item.quantity));
+
+      }
     }
-  },[loading])
+  });
+}, [ dispatch, alert]);
+
+  const calculateSubtotal = (quantity, stock, price) => {
+    const validQuantity = getValidQuantity(quantity, stock);
+    return validQuantity * price;
+  };
+
   return (
     <Fragment>
       {cartItems.products.length === 0 ? (
@@ -61,55 +92,81 @@ const Cart = () => {
               <p>Quantity</p>
               <p>SubTotal</p>
             </div>
-            {cartItems.products.map((item) => (
-              <div className="cartContainer" key={item._id}>
-                <CartItem
-                  item={{
-                    name: item.productId.name,
-                    image: item.productId.images[0]?.url,
-                    price: item.productId.price,
-                    productId: item.productId._id,
-                  }}
-                  removeItems={removeItems}
-                />
-                <div className="cartInput">
-                  <button
-                    onClick={() =>
-                      decreaseQuantity(item.productId._id, item.quantity)
-                    }
-                  >
-                    -
-                  </button>
-                  <input type="number" value={item.quantity} readOnly />
-                  <button
-                    onClick={() =>
-                      increaseQuantity(
-                        item.productId._id,
-                        item.quantity,
-                        item.productId.Stock
-                      )
-                    }
-                  >
-                    +
-                  </button>
+            {cartItems.products.map((item) => {
+              const validQuantity = getValidQuantity(item.quantity, item.productId.Stock);
+
+              return (
+                <div className="cartContainer" key={item._id}>
+                  <CartItem
+                    item={{
+                      name: item.productId.name,
+                      image: item.productId.images[0]?.url,
+                      price: item.productId.price,
+                      productId: item.productId._id,
+                    }}
+                    removeItems={removeItems}
+                  />
+                  <div className="cartInput">
+                    <button
+                      onClick={() =>
+                        decreaseQuantity(item.productId._id, validQuantity)
+                      }
+                      disabled={validQuantity <= 1}
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      value={validQuantity}
+                      readOnly
+                    />
+                    <button
+                      onClick={() =>
+                        increaseQuantity(
+                          item.productId._id,
+                          validQuantity,
+                          item.productId.Stock
+                        )
+                      }
+                      disabled={validQuantity >= item.productId.Stock}
+                    >
+                      +
+                    </button>
+                  </div>
+                  <p className="cartSubtotal">
+                    $ {calculateSubtotal(
+                      item.quantity,
+                      item.productId.Stock,
+                      item.productId.price
+                    )}
+                  </p>
+
                 </div>
-                <p className="cartSubtotal">
-                  $ {item.quantity * item.productId.price}
-                </p>
-              </div>
-            ))}
+              );
+            })}
             <div className="cartGrossTotal">
               <div></div>
               <div className="cartGrossTotalBox">
                 <p>Gross Total</p>
                 <p>{`$ ${cartItems.products.reduce(
-                  (acc, item) => acc + item.quantity * item.productId.price,
+                  (acc, item) => acc + calculateSubtotal(
+                    item.quantity,
+                    item.productId.Stock,
+                    item.productId.price
+                  ),
                   0
                 )}`}</p>
               </div>
               <div></div>
               <div className="checkOutBtn">
-                <button onClick={checkoutHandler}>Check Out</button>
+                <button
+                  onClick={checkoutHandler}
+                  disabled={cartItems.products.some(
+                    item => item.productId.Stock === 0 || getValidQuantity(item.quantity, item.productId.Stock) === 0
+                  )}
+                >
+                  Check Out
+                </button>
               </div>
             </div>
           </div>

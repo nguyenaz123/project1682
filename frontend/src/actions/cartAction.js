@@ -124,6 +124,6 @@ export const saveShippingInfo = (data) => async (dispatch) => {
 
 }
 // Xóa lỗi
-export const clearErrors = () => (dispatch) => {
+export const clearCartErrors = () => (dispatch) => {
     dispatch({ type: CLEAR_ERRORS });
 };

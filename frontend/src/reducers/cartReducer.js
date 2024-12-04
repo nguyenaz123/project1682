@@ -85,6 +85,11 @@ export const cartReducer = (state = initialState, action) => {
                 ...state,
                 shippingInfo: action.payload,
             }
+            case CLEAR_ERRORS:
+            return {
+            ...state,
+            error: null,
+            }
             default:
                 return state;
         }

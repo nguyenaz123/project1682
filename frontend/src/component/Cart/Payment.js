@@ -14,7 +14,7 @@ import React, { Fragment, useEffect, useRef } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { clearCart } from "../../actions/cartAction";
+import { clearCart, getCart } from "../../actions/cartAction";
 import { clearErrors, createOrder } from "../../actions/orderAction";
 import MetaData from "../layout/MetaData";
 import CheckOutSteps from "./CheckOutSteps";
@@ -58,85 +58,110 @@ const Payment = () => {
     shippingPrice: orderInfo.shippingCharges,
     totalPrice: orderInfo.totalPrice,
   };
+  useEffect(() => {
+dispatch(getCart())
+}, [dispatch]);
+useEffect(() => {
+  // Kiểm tra xem có orderInfo không
+  if (!orderInfo) {
+    navigate("/cart");
+    return;
+  }
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    payBtn.current.disabled = true;
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
+  // Kiểm tra xem giỏ hàng có trống không
+  if (cartItems.products.length === 0) {
+    navigate("/cart");
+    return;
+  }
 
-      // Gửi yêu cầu xử lý thanh toán tới backend
-      const { data } = await axios.post(
-        "/api/v1/payment/process",
-        paymentData,
-        config
-      );
+  // Kiểm tra lỗi
+  if (error) {
+    alert.error(error);
+    dispatch(clearErrors());
+  }
+}, [orderInfo, cartItems.products, navigate, error, dispatch, alert]);
 
-      const client_secret = data.client_secret;
-      if (!stripe || !element) return;
+const submitHandler = async (e) => {
+  e.preventDefault();
+  payBtn.current.disabled = true;
 
-      // Xác nhận thanh toán qua Stripe
-      const result = await stripe.confirmCardPayment(client_secret, {
-        payment_method: {
-          card: element.getElement(CardNumberElement),
-          billing_details: {
-            name: user.name,
-            email: user.email,
-            address: {
-              line1: shippingInfo.address,
-              city: shippingInfo.city,
-              state: shippingInfo.state,
-              postal_code: shippingInfo.pinCode,
-              country: shippingInfo.country,
-            },
+  try {
+    // Kiểm tra stock trước khi gọi Stripe
+    const hasInsufficientStock = cartItems.products.some(item => {
+      if (item.quantity > item.productId.Stock) {
+        alert.error(`${item.productId.name} has insufficient stock. Available: ${item.productId.Stock}, Required: ${item.quantity}`);
+        return true;
+      }
+      return false;
+    });
+
+    if (hasInsufficientStock) {
+      payBtn.current.disabled = false;
+      return;
+    }
+
+    // Nếu stock đủ, tiếp tục với Stripe
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    const { data } = await axios.post(
+      "/api/v1/payment/process",
+      paymentData,
+      config
+    );
+
+    const client_secret = data.client_secret;
+    if (!stripe || !element) return;
+
+    const result = await stripe.confirmCardPayment(client_secret, {
+      payment_method: {
+        card: element.getElement(CardNumberElement),
+        billing_details: {
+          name: user.name,
+          email: user.email,
+          address: {
+            line1: shippingInfo.address,
+            city: shippingInfo.city,
+            state: shippingInfo.state,
+            postal_code: shippingInfo.pinCode,
+            country: shippingInfo.country,
           },
         },
-      });
+      },
+    });
 
-      if (result.error) {
-        if (result.error.code === "incomplete_number" || result.error.code === "incomplete_expiry" || result.error.code === "incomplete_cvc") {
-          result.error.message = "Please fill out all fields of the form!";
-        }
-        else if (result.error.code === "invalid_number" ) {
-          result.error.message = "Invalid card number!";
-        }
-        else if (result.error.code === "invalid_expiry_year_past" ) {
-          result.error.message = "The card has expired!";
-        }
-        payBtn.current.disabled = false;
-        alert.error(result.error.message);
-        console.log(result.error.code)
-      } else {
-        if (result.paymentIntent.status === "succeeded") {
-          order.paymentInfo = {
-            id: result.paymentIntent.id,
-            status: result.paymentIntent.status,
-          };
+    if (result.error) {
+      payBtn.current.disabled = false;
+      alert.error(result.error.message);
+    } else {
+      if (result.paymentIntent.status === "succeeded") {
+        order.paymentInfo = {
+          id: result.paymentIntent.id,
+          status: result.paymentIntent.status,
+        };
 
+        try {
           dispatch(createOrder(order));
-
           navigate("/success");
           dispatch(clearCart());
-        } else {
-          alert.error("There was an issue with the payment.");
+        } catch (error) {
+          payBtn.current.disabled = false;
+          alert.error(error.response?.data?.message || "Error creating order");
         }
+      } else {
+        payBtn.current.disabled = false;
+        alert.error("There was an issue with the payment");
       }
-    } catch (error) {
-      payBtn.current.disabled = false;
-      alert.error(error.response.data.message);
     }
-  };
+  } catch (error) {
+    payBtn.current.disabled = false;
+    alert.error(error.response?.data?.message || "Payment failed");
+  }
+};
 
-  useEffect(() => {
-    if (error) {
-      alert.error(error);
-      dispatch(clearErrors());
-    }
-  }, [dispatch, alert, error]);
 
   return (
     <Fragment>

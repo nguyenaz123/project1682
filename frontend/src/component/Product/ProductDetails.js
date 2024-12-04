@@ -8,7 +8,7 @@ import ReviewCard from "./ReviewCart.js";
 import Loader from '../layout/Loader/Loader';
 import { useAlert } from "react-alert";
 import MetaData from '../layout/MetaData';
-import { addToCart } from "../../actions/cartAction";
+import { addToCart, clearCartErrors } from "../../actions/cartAction";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 import { Rating } from '@mui/material'
 import { NEW_REVIEW_RESET } from '../../constants/productConstants';
@@ -59,7 +59,17 @@ const ProductDetails = () => {
   }
   const addToCartProcess = () => {
     dispatch(addToCart(id, quantity))
+
   }
+  useEffect(() => {
+    // Reset success state when component mounts
+    dispatch({ type: ADD_TO_CART_RESET });
+
+    return () => {
+      // Reset success state when component unmounts
+      dispatch({ type: ADD_TO_CART_RESET });
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (error) {
@@ -74,19 +84,21 @@ const ProductDetails = () => {
 
     if (errorAddToCart) {
       alert.error(errorAddToCart);
-      dispatch(clearErrors());
+      dispatch(clearCartErrors());
     }
-    if (successAddToCart) {
-    alert.success("Add to cart successfully");
-    dispatch({ type: ADD_TO_CART_RESET });
-  }
 
     if (success) {
-      alert.success("review submitted successfully");
+      alert.success("Review submitted successfully");
       dispatch({ type: NEW_REVIEW_RESET });
     }
+
+    if (successAddToCart) {
+      alert.success("Product added to cart successfully");
+      dispatch({ type: ADD_TO_CART_RESET });
+    }
+
     dispatch(getProductDetails(id));
-  }, [dispatch, id, error, alert,errorAddToCart,successAddToCart, reviewError, success]);
+  }, [dispatch, id, error, alert, errorAddToCart, successAddToCart, reviewError, success]);
   if (!product || !product.images) return <p>No product details available</p>;
   const options = {
     size: "large",

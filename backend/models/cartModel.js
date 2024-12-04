@@ -16,7 +16,6 @@ const cartSchema = new mongoose.Schema({
             quantity: {
                 type: Number,
                 required: [true, "Please specify the quantity"],
-                min: [1, "Quantity must be at least 1"],
             },
         },
     ],
