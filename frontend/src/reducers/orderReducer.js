@@ -8,35 +8,38 @@ import {
   CLEAR_ERRORS
 } from "../constants/orderConstants";
 
-export const newOrderReducer = (state = {}, action) => {
+export const newOrderReducer = (state = { success: false }, action) => {
   switch (action.type) {
     case CREATE_ORDER_REQUEST:
       return {
         ...state,
         loading: true,
-      }
+        success: false,
+        error: null
+      };
     case CREATE_ORDER_SUCCESS:
       return {
         loading: false,
+        success: true,
+        error: null,
         order: action.payload
-      }
+      };
     case CREATE_ORDER_FAIL:
       return {
         loading: false,
-        error: action.payload
-      }
-
-      case CLEAR_ERRORS:
+        success: false,
+        error: action.payload,
+        order: null
+      };
+    case CLEAR_ERRORS:
       return {
         ...state,
-        error: null,
-      }
-
-
+        error: null
+      };
     default:
       return state;
   }
-}
+};
 
 export const myOrdersReducer = (state = { orders: [] }, action) => {
   switch (action.type) {

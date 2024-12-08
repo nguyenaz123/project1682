@@ -20,43 +20,20 @@ exports.sendStripeApiKey = catchAsyncErrors(async (req, res, next) => {
 
 
 
-exports.getLatestPayment = catchAsyncErrors(async (req, res, next) => {
+exports.refundPayment = catchAsyncErrors(async (req, res, next) => {
+  const { paymentIntentId } = req.body;
+
   try {
-    // Lấy danh sách payment intents, giới hạn 1 kết quả
-    const payments = await stripe.paymentIntents.list({
-      limit: 1,
-      created: {
-        lt: Math.floor(Date.now() / 1000)
-      }
+    const refund = await stripe.refunds.create({
+      payment_intent: paymentIntentId,
+      reason: 'requested_by_customer'
     });
-
-    if (payments.data.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No payment found"
-      });
-    }
-
-    const latestPayment = payments.data[0];
 
     res.status(200).json({
       success: true,
-      payment: {
-        id: latestPayment.id,
-        amount: latestPayment.amount,
-        currency: latestPayment.currency,
-        status: latestPayment.status,
-        created: latestPayment.created,
-        payment_method_types: latestPayment.payment_method_types,
-        metadata: latestPayment.metadata
-      }
+      refund
     });
   } catch (error) {
-    console.error('Stripe API Error:', error);
-    return res.status(500).json({
-      success: false,
-      message: "Error fetching payment information",
-      error: error.message
-    });
+    return next(new Error(`Refund failed: ${error.message}`));
   }
 });

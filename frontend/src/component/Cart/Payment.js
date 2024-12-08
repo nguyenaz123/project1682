@@ -143,14 +143,29 @@ const submitHandler = async (e) => {
           status: result.paymentIntent.status,
         };
 
+        const orderSuccess = await dispatch(createOrder(order));
+
+      if (orderSuccess) {
+        alert.success("Order placed successfully!");
+        dispatch(clearCart());
+        navigate("/success");
+      } else {
         try {
-          dispatch(createOrder(order));
-          navigate("/success");
-          dispatch(clearCart());
-        } catch (error) {
-          payBtn.current.disabled = false;
-          alert.error(error.response?.data?.message || "Error creating order");
+          const refundResponse = await axios.post("/api/v1/payment/refund", {
+            paymentIntentId: result.paymentIntent.id
+          });
+
+          if (refundResponse.data.success) {
+            alert.error("Order creation failed. Payment has been refunded.");
+          } else {
+            alert.error("Order failed and refund was not successful.");
+          }
+        } catch (refundError) {
+          alert.error("Order failed and refund failed. Please contact support.");
         }
+        navigate("/products");
+      }
+
       } else {
         payBtn.current.disabled = false;
         alert.error("There was an issue with the payment");

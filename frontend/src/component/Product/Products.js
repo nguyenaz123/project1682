@@ -39,6 +39,7 @@ const Products = () => {
     setCategory("");
     setRatings(0);
     setCurrentPage(1);
+    navigate("/products")
   };
 
   useEffect(() => {
